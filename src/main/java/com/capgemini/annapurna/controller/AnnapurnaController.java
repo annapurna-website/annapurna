@@ -12,12 +12,15 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.capgemini.annapurna.restaurant.entity.Address;
 import com.capgemini.annapurna.restaurant.entity.Cart;
@@ -36,6 +39,14 @@ public class AnnapurnaController {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	/******* Login ******/
+	 @RequestMapping(value = "/login", method = RequestMethod.GET)
+	    public ModelAndView login() {
+	        ModelAndView modelAndView = new ModelAndView();
+	        modelAndView.setViewName("login");
+	        return modelAndView;
+	    }
 
 	/******** Restaurant ********/
 	
@@ -82,14 +93,19 @@ public class AnnapurnaController {
 
 	/******** Profile ********/
 	
-	@RequestMapping("/signup")
+	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String signUpPage() {
 		return "AccountForm";
 	}
 	
+	@Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	@RequestMapping("/createAccount")
 	public String createAccount(@ModelAttribute Profile profile,Model model){
 		System.out.println(profile);
+		profile.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
+		profile.setRole("USER");
 		restTemplate.postForEntity("http://annapurna-profile/profiless", profile, Profile.class);
 		ResponseEntity<List> entity = restTemplate.getForEntity("http://annapurna-restaurant/restaurants", List.class);
 		model.addAttribute("list", entity.getBody());

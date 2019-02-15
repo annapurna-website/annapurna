@@ -1,10 +1,7 @@
 package com.capgemini.annapurna.restaurant.entity;
 
 import java.time.LocalDate;
-
-import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
-
 
 public class Profile {
 
@@ -21,6 +18,8 @@ public class Profile {
 	private Long phoneNumber;
 	private String gender;
 	private static int profileIdGenerator;
+	private String role;
+	
 	static {
 		profileIdGenerator=100;
 	}
@@ -34,7 +33,7 @@ public class Profile {
 	}
 
 	public Profile(int profileId, String profileImage, String name,String userName,String password,LocalDate dateOfBirth, Address address, int cartId,
-			String emailId, Long phoneNumber, String gender) {
+			String emailId, Long phoneNumber, String gender, String role) {
 		super();
 		this.profileId=profileId ;
 		this.profileImage = profileImage;
@@ -44,8 +43,8 @@ public class Profile {
 		this.cartId = cartId;
 		this.emailId = emailId;
 		this.phoneNumber = phoneNumber;
-	
 		this.gender = gender;
+		this.role = role;
 	}
 	
 
@@ -144,5 +143,23 @@ public class Profile {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	@Override
+	public String toString() {
+		return "Profile [profileId=" + profileId + ", profileImage=" + profileImage + ", name=" + name + ", userName="
+				+ userName + ", password=" + password + ", dateOfBirth=" + dateOfBirth + ", address=" + address
+				+ ", cartId=" + cartId + ", emailId=" + emailId + ", phoneNumber=" + phoneNumber + ", gender=" + gender
+				+ ", role=" + role + "]";
+	}
+	
+	
 
 }
